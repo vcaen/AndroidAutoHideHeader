@@ -1,16 +1,13 @@
 package fr.vadimcaen.mytestapplication;
 
-import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import fr.vadimcaen.autohideheader.AutoHideHeaderListView;
+import fr.vadimcaen.autohideheader.AutoHideHeaderLayout;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -26,7 +23,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AutoHideHeaderListView view  = (AutoHideHeaderListView) findViewById(R.id.autohideview);
+        AutoHideHeaderLayout view  = (AutoHideHeaderLayout) findViewById(R.id.autohideview);
         ListView listView = new ListView(this);
 
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, R.id.info_text, mockValues));
