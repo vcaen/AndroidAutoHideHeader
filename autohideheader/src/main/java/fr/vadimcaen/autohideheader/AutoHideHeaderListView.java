@@ -131,6 +131,7 @@ public class AutoHideHeaderListView extends RelativeLayout {
                             _origBodyY = getY();
                             _origHeaderY = _headerLayout.getY();
                             return super.dispatchTouchEvent(event);
+
                         } else if (_state != HeaderState.HIDDEN && _headerLayout.getY() + _headerLayout.getHeight() <= AutoHideHeaderListView.this.getY()) {
                             _state = HeaderState.HIDDEN;
                             Log.d("State", _state.name());
@@ -139,17 +140,23 @@ public class AutoHideHeaderListView extends RelativeLayout {
                             _origBodyY = getY();
                             _origHeaderY = _headerLayout.getY();
                             return super.dispatchTouchEvent(event);
+
                         } else {
                             _state = HeaderState.OPENING;
                             Log.d("State", _state.name());
-                            if (_origHeaderY + movedDistance > _origHeaderY + _headerLayout.getHeight()) {
+
+                            if (_origHeaderY + movedDistance > AutoHideHeaderListView.this.getY()) {
+                            //if (_origHeaderY + movedDistance > _origHeaderY + _headerLayout.getHeight()) {
+
                                 Log.d("State", "1");
-                                _headerLayout.setY(_origHeaderY + _headerLayout.getHeight());
-                                setY(_origBodyY + _headerLayout.getHeight());
+                                _headerLayout.setY(AutoHideHeaderListView.this.getY());
+                                setY(AutoHideHeaderListView.this.getY() + _headerLayout.getHeight());
+
                             } else if (_origHeaderY + movedDistance < AutoHideHeaderListView.this.getY() - _headerLayout.getHeight()) {
                                 Log.d("State", "2");
                                 _headerLayout.setY(AutoHideHeaderListView.this.getY() - _headerLayout.getHeight());
                                 setY(AutoHideHeaderListView.this.getY());
+
                             } else {
                                 Log.d("State", "3");
                                 setY(_origBodyY + movedDistance);
