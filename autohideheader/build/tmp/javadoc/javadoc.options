@@ -1,0 +1,6 @@
+-classpath '/Users/vcaen/Library/Android/sdk/platforms/android-22/android.jar'
+-d '/Users/vcaen/workspace/android/AutoHideHeaderExample/autohideheader/build/docs/javadoc'
+-doctitle 'autohideheader 1.0.1 API'
+-quiet 
+-windowtitle 'autohideheader 1.0.1 API'
+'/Users/vcaen/workspace/android/AutoHideHeaderExample/autohideheader/src/main/java/fr/vadimcaen/autohideheader/AutoHideHeaderLayout.java'
