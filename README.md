@@ -1,5 +1,5 @@
 # AndroidAutoHideHeader
-[ ![Download](https://api.bintray.com/packages/vcaen/maven/android-auto-hide-header/images/download.svg) ](https://bintray.com/vcaen/maven/android-auto-hide-header/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/vcaen/maven/androidautohideheader/images/download.svg) ](https://bintray.com/vcaen/maven/androidautohideheader/_latestVersion)
 
 A layout that hide the header when the body is scrolled down and reveal it when the header is scrolled up
 
@@ -12,7 +12,7 @@ A layout that hide the header when the body is scrolled down and reveal it when 
 In you xml, add the '''AutoHideHeaderLayout''' : 
 
 ```xml
-    <fr.vadimcaen.autohideheader.AutoHideHeaderLayout
+    <com.vcaen.androidautohideheader.AutoHideHeaderLayout
         android:id="@+id/autohideview"
        android:layout_width="match_parent"
        android:layout_height="match_parent"/>
@@ -28,21 +28,12 @@ Then in your java code :
 
 ## Import it ! 
 
-For now I'm waiting for my project to be linked on jcenter so you can add the following repo on you root gradle file : 
 
-```
-repositories {
-    maven {
-        url  "http://dl.bintray.com/vcaen/maven" 
-    }
-}
-```
-
-And add the following dependency in you application gradle :
+In your gradle "app" :
 
 ```
 dependencies {
-    compile 'com.vadimcaen.library:android-auto-hide-header:1.0.2'
+    compile 'com.vcaen:androidautohideheader:1.0'
 }
 ```
 ```
