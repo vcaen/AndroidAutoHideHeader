@@ -1,2 +1,2 @@
-include ':app', ':autohideheader'
+include ':app', ':androidautohideheader'
 

@@ -4,9 +4,34 @@
                 android:layout_height="match_parent"
                 tools:context=".MainActivity">
 
-<fr.vadimcaen.autohideheader.AutoHideHeaderLayout
-    android:id="@+id/autohideview"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    <com.vcaen.androidautohideheader.AutoHideHeaderLayout
+        android:id="@+id/autohideview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg"/>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </ScrollView>
+    </com.vcaen.androidautohideheader.AutoHideHeaderLayout>
 
 </RelativeLayout>
