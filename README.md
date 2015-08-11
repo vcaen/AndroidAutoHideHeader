@@ -9,6 +9,7 @@ A layout that hide the header when the body is scrolled down and reveal it when 
 
 ## Usage
 
+### Programmatically 
 In you xml, add the '''AutoHideHeaderLayout''' : 
 
 ```xml
@@ -26,6 +27,50 @@ Then in your java code :
     view.setBodyView(listView);
 ```
 
+### XML Only
+
+You can add the childs directly into the XML by adding them inside the ```AutoHideHeaderLayout``` :
+```xml
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MainActivity">
+
+    <com.vcaen.androidautohideheader.AutoHideHeaderLayout
+        android:id="@+id/autohideview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg"/>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+        </ScrollView>
+    </com.vcaen.androidautohideheader.AutoHideHeaderLayout>
+
+</RelativeLayout>
+```
+
+
 ## Import it ! 
 
 
@@ -33,7 +78,7 @@ In your gradle "app" :
 
 ```
 dependencies {
-    compile 'com.vcaen:androidautohideheader:1.0'
+    compile 'com.vcaen:androidautohideheader:1.1'
 }
 ```
 ```
