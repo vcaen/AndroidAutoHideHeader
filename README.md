@@ -29,7 +29,7 @@ Then in your java code :
 
 ### XML Only
 
-You can add the childs directly into the XML by adding them inside the ```AutoHideHeaderLayout``` :
+You can add the children directly into the XML by adding them inside the ```AutoHideHeaderLayout``` :
 ```xml
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
