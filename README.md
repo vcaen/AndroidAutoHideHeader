@@ -105,7 +105,7 @@ The following options are available :
     ```
 
 
-  * Fix the header if the Body is smaller than the view
+  * Fix the header if the child is smaller than the view. Only works if the child has height set at ```wrap_content```
 
     *Java*
     ```java
