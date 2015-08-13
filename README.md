@@ -30,6 +30,7 @@ In you xml, add the '''AutoHideHeaderLayout''' :
 
 ```xml
     <com.vcaen.androidautohideheader.AutoHideHeaderLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/autohideview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
