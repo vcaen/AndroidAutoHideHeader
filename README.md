@@ -16,7 +16,7 @@ In your gradle "app" :
 
 ```
 dependencies {
-    compile 'com.vcaen:androidautohideheader:1.1'
+    compile 'com.vcaen:androidautohideheader:1.2'
 }
 ```
 
@@ -93,12 +93,12 @@ The following options are available :
 
   * Fix the header
 
-    * Java *
+    *Java*
     ```java
         autoHideHeaderLayout.setFixed(Boolean)
     ```
 
-    * XML *
+    *XML*
     ```xml
         app:fixed="true"
     ```
@@ -106,12 +106,12 @@ The following options are available :
 
   * Fix the header if the Body is smaller than the view
 
-    * Java *
+    *Java*
     ```java
         autoHideHeaderLayout.setFixedIfChildSmall(Boolean)
     ```
 
-    * XML *
+    *XML*
     ```xml
         app:fixedIfChildSmall="true"
     ```
