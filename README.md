@@ -1,5 +1,6 @@
 # AndroidAutoHideHeader
 [ ![Download](https://api.bintray.com/packages/vcaen/maven/androidautohideheader/images/download.svg) ](https://bintray.com/vcaen/maven/androidautohideheader/_latestVersion)
+[ ![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidAutoHideHeader-blue.svg?style=flat)](http://android-arsenal.com/details/1/2285)
 
 A layout that hide the header when the body is scrolled down and reveal it when the header is scrolled up
 
