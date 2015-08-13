@@ -5,33 +5,13 @@
                 tools:context=".MainActivity">
 
     <com.vcaen.androidautohideheader.AutoHideHeaderLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/autohideview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:fixedIfChildSmall="false"
+        app:fixed="false"
+        />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/bg"/>
-
-        </RelativeLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-            </LinearLayout>
-        </ScrollView>
-    </com.vcaen.androidautohideheader.AutoHideHeaderLayout>
 
 </RelativeLayout>

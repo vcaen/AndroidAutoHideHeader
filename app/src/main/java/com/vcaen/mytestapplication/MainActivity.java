@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -12,7 +13,7 @@ import com.vcaen.androidautohideheader.AutoHideHeaderLayout;
 
 public class MainActivity extends ActionBarActivity {
 
-    String[] mockValues = new String[40];
+    String[] mockValues = new String[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +26,11 @@ public class MainActivity extends ActionBarActivity {
 
         AutoHideHeaderLayout view  = (AutoHideHeaderLayout) findViewById(R.id.autohideview);
         ListView listView = new ListView(this);
-
+        listView.setLayoutParams(new AutoHideHeaderLayout.LayoutParams(AutoHideHeaderLayout.LayoutParams.MATCH_PARENT, AutoHideHeaderLayout.LayoutParams.WRAP_CONTENT));
         listView.setAdapter(new ArrayAdapter<>(this, R.layout.list_item, R.id.info_text, mockValues));
         listView.setDividerHeight(10);
-        //view.setHeader(R.layout.header);
-        //view.setBodyView(listView);
+        view.setHeader(R.layout.header);
+        view.setBodyView(listView);
 
 
     }

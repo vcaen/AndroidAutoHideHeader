@@ -8,16 +8,33 @@ A layout that hide the header when the body is scrolled down and reveal it when 
 
 ![Demo gif](https://raw.githubusercontent.com/vcaen/AndroidAutoHideHeader/master/example.gif)
 
+
+## Import it !
+
+
+In your gradle "app" :
+
+```
+dependencies {
+    compile 'com.vcaen:androidautohideheader:1.1'
+}
+```
+
+
 ## Usage
 
-### Programmatically 
+### Basics
+
+#### Programmatically
 In you xml, add the '''AutoHideHeaderLayout''' : 
 
 ```xml
     <com.vcaen.androidautohideheader.AutoHideHeaderLayout
         android:id="@+id/autohideview"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:fixedIfChildSmall="false"
+        app:fixed="false"/>
 ``` 
 
 Then in your java code : 
@@ -28,7 +45,7 @@ Then in your java code :
     view.setBodyView(listView);
 ```
 
-### XML Only
+#### XML Only
 
 You can add the children directly into the XML by adding them inside the ```AutoHideHeaderLayout``` :
 ```xml
@@ -70,18 +87,34 @@ You can add the children directly into the XML by adding them inside the ```Auto
 
 </RelativeLayout>
 ```
+### Options :
+
+The following options are available :
+
+  * Fix the header
+
+    * Java *
+    ```java
+        autoHideHeaderLayout.setFixed(Boolean)
+    ```
+
+    * XML *
+    ```xml
+        app:fixed="true"
+    ```
 
 
-## Import it ! 
+  * Fix the header if the Body is smaller than the view
 
+    * Java *
+    ```java
+        autoHideHeaderLayout.setFixedIfChildSmall(Boolean)
+    ```
 
-In your gradle "app" :
-
-```
-dependencies {
-    compile 'com.vcaen:androidautohideheader:1.1'
-}
-```
+    * XML *
+    ```xml
+        app:fixedIfChildSmall="true"
+    ```
 
 
 ## License

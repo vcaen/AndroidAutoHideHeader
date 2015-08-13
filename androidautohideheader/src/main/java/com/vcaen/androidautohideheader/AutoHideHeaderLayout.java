@@ -25,11 +25,13 @@
 package com.vcaen.androidautohideheader;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
@@ -46,29 +48,45 @@ public class AutoHideHeaderLayout extends RelativeLayout {
         OPENED
     }
 
+    private boolean _fixedIfChildSmall = true;
+    private boolean _fixed = false;
+
 
     View _headerLayout;
     BodyLayout _bodyLayout;
     HeaderState _state;
 
     public AutoHideHeaderLayout(Context context) {
-        super(context);
-        init(context);
+        this(context, null);
     }
 
 
     public AutoHideHeaderLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context);
+        this(context, attrs, 0);
     }
 
     public AutoHideHeaderLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        _state = HeaderState.OPENED;
+        createBody(context);
+
+
+        if (attrs != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(
+                    attrs,
+                    R.styleable.AutoHideHeaderLayout,
+                    0, 0);
+
+            try {
+                setFixed(a.getBoolean(R.styleable.AutoHideHeaderLayout_fixed, false));
+                setFixedIfChildSmall(a.getBoolean(R.styleable.AutoHideHeaderLayout_fixedIfChildSmall, true));
+            } finally {
+                a.recycle();
+            }
+        }
     }
 
-    private void init(Context context) {
-        _state = HeaderState.OPENED;
+    private void createBody(Context context) {
         _bodyLayout = new BodyLayout(context);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         _bodyLayout.setLayoutParams(params);
@@ -83,7 +101,7 @@ public class AutoHideHeaderLayout extends RelativeLayout {
      */
     public void setHeader(View header) {
         if (_headerLayout != null) {
-            removeView(header);
+            removeView(_headerLayout);
         }
         _headerLayout = header;
         if (header != null) {
@@ -115,6 +133,14 @@ public class AutoHideHeaderLayout extends RelativeLayout {
         requestLayout();
     }
 
+    public void setFixed(boolean fixed) {
+        _fixed = fixed;
+    }
+
+    public void setFixedIfChildSmall(boolean fixedIfChildSmall) {
+        _fixedIfChildSmall = fixedIfChildSmall;
+    }
+
     @Override public void addView(View child) {
         if (getChildCount() <= 2) {
             super.addView(child);
@@ -126,14 +152,14 @@ public class AutoHideHeaderLayout extends RelativeLayout {
 
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
-            if(!(child instanceof BodyLayout)) {
+            if (!(child instanceof BodyLayout)) {
                 if (_headerLayout == null) {
                     removeView(child);
                     setHeader(child);
                 } else if (!_bodyLayout.hasInnerView()) {
                     removeView(child);
                     setBodyView(child);
-                } else if (i > 1){
+                } else if (i > 1) {
                     removeViewAt(i);
                 }
             }
@@ -157,96 +183,97 @@ public class AutoHideHeaderLayout extends RelativeLayout {
 
         public BodyLayout(Context context) {
             super(context);
-
         }
 
 
         @Override public boolean dispatchTouchEvent(MotionEvent event) {
 
-            movedDistance = event.getRawY() - _origY;
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    _origY = event.getRawY();
-                    _origBodyY = getY();
-                    _origHeaderY = _headerLayout.getY();
-                    break;
-                case MotionEvent.ACTION_MOVE:
-                    Log.d("MovedDistance", "State : " + _state.name() + " Distance : " + movedDistance);
+            if (!_fixed && (_fixedIfChildSmall && _innerView.getHeight() > getHeight() - _headerLayout.getHeight() || !_fixedIfChildSmall)) {
+                movedDistance = event.getRawY() - _origY;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        _origY = event.getRawY();
+                        _origBodyY = getY();
+                        _origHeaderY = _headerLayout.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        Log.d("MovedDistance", "State : " + _state.name() + " Distance : " + movedDistance);
 
-                    if (_state == HeaderState.OPENING || _state == HeaderState.HIDDEN && movedDistance > 1 || _state == HeaderState.OPENED && movedDistance < -1) {
-
-
-                        if (_state != HeaderState.OPENED && _headerLayout.getY() + _headerLayout.getHeight() >= AutoHideHeaderLayout.this.getY() + _headerLayout.getHeight()) {
-
-                            // The header is OPENED, we reset the event as it was a down event and pass it to the child view
-                            _state = HeaderState.OPENED;
-                            Log.d("State", _state.name());
-                            event.setAction(MotionEvent.ACTION_DOWN);
-                            _origY = event.getRawY();
-                            _origBodyY = getY();
-                            _origHeaderY = _headerLayout.getY();
-                            return super.dispatchTouchEvent(event);
-
-                        } else if (_state != HeaderState.HIDDEN && _headerLayout.getY() + _headerLayout.getHeight() <= AutoHideHeaderLayout.this.getY()) {
-
-                            // The header is HIDDEN, we reset the event as it was a down event and pass it to the child view
-                            _state = HeaderState.HIDDEN;
-                            Log.d("State", _state.name());
-                            event.setAction(MotionEvent.ACTION_DOWN);
-                            _origY = event.getRawY();
-                            _origBodyY = getY();
-                            _origHeaderY = _headerLayout.getY();
-                            return super.dispatchTouchEvent(event);
-
-                        } else {
-
-                            // We follow the touch gestur
-                            _state = HeaderState.OPENING;
-                            Log.d("State", _state.name());
+                        if (_state == HeaderState.OPENING || _state == HeaderState.HIDDEN && movedDistance > 1 || _state == HeaderState.OPENED && movedDistance < -1) {
 
 
-                            if (_origHeaderY + movedDistance > AutoHideHeaderLayout.this.getY()) {
-                                // if the movement if greater than the place where the views should be,
-                                // (the top of the parent view) we block it to the desired position
+                            if (_state != HeaderState.OPENED && _headerLayout.getY() + _headerLayout.getHeight() >= AutoHideHeaderLayout.this.getY() + _headerLayout.getHeight()) {
 
-                                Log.d("State", "1");
-                                _headerLayout.setY(AutoHideHeaderLayout.this.getY());
-                                setY(AutoHideHeaderLayout.this.getY() + _headerLayout.getHeight());
+                                // The header is OPENED, we reset the event as it was a down event and pass it to the child view
+                                _state = HeaderState.OPENED;
+                                Log.d("State", _state.name());
+                                event.setAction(MotionEvent.ACTION_DOWN);
+                                _origY = event.getRawY();
+                                _origBodyY = getY();
+                                _origHeaderY = _headerLayout.getY();
+                                return super.dispatchTouchEvent(event);
 
-                            } else if (_origHeaderY + movedDistance < AutoHideHeaderLayout.this.getY() - _headerLayout.getHeight()) {
-                                // if the movement if greater than the place where the views should be,
-                                // (the top of the parent view) we block it to the desired position,
-                                // with the header hidden on top of the body
-                                Log.d("State", "2");
-                                _headerLayout.setY(AutoHideHeaderLayout.this.getY() - _headerLayout.getHeight());
-                                setY(AutoHideHeaderLayout.this.getY());
+                            } else if (_state != HeaderState.HIDDEN && _headerLayout.getY() + _headerLayout.getHeight() <= AutoHideHeaderLayout.this.getY()) {
+
+                                // The header is HIDDEN, we reset the event as it was a down event and pass it to the child view
+                                _state = HeaderState.HIDDEN;
+                                Log.d("State", _state.name());
+                                event.setAction(MotionEvent.ACTION_DOWN);
+                                _origY = event.getRawY();
+                                _origBodyY = getY();
+                                _origHeaderY = _headerLayout.getY();
+                                return super.dispatchTouchEvent(event);
 
                             } else {
 
-                                // Just move the body and header as much as the touch gesture
-                                Log.d("State", "3");
-                                setY(_origBodyY + movedDistance);
-                                _headerLayout.setY(_origHeaderY + movedDistance);
+                                // We follow the touch gestur
+                                _state = HeaderState.OPENING;
+                                Log.d("State", _state.name());
+
+
+                                if (_origHeaderY + movedDistance > AutoHideHeaderLayout.this.getY()) {
+                                    // if the movement if greater than the place where the views should be,
+                                    // (the top of the parent view) we block it to the desired position
+
+                                    Log.d("State", "1");
+                                    _headerLayout.setY(AutoHideHeaderLayout.this.getY());
+                                    setY(AutoHideHeaderLayout.this.getY() + _headerLayout.getHeight());
+
+                                } else if (_origHeaderY + movedDistance < AutoHideHeaderLayout.this.getY() - _headerLayout.getHeight()) {
+                                    // if the movement if greater than the place where the views should be,
+                                    // (the top of the parent view) we block it to the desired position,
+                                    // with the header hidden on top of the body
+                                    Log.d("State", "2");
+                                    _headerLayout.setY(AutoHideHeaderLayout.this.getY() - _headerLayout.getHeight());
+                                    setY(AutoHideHeaderLayout.this.getY());
+
+                                } else {
+
+                                    // Just move the body and header as much as the touch gesture
+                                    Log.d("State", "3");
+                                    setY(_origBodyY + movedDistance);
+                                    _headerLayout.setY(_origHeaderY + movedDistance);
+                                }
                             }
                         }
-                    }
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    // Handle the fling gesture
-                    long time = event.getEventTime() - event.getDownTime();
-                    if (time < MIN_EVENT_TIME) {
-                        if (Math.abs(movedDistance) < _headerLayout.getHeight()) {
-                            if (movedDistance > 0) {
-                                _headerLayout.animate().y(AutoHideHeaderLayout.this.getY()).setDuration(ANIMATION_DURATION).start();
-                                _bodyLayout.animate().y(AutoHideHeaderLayout.this.getY() + _headerLayout.getHeight()).setDuration(ANIMATION_DURATION).start();
-                            } else if (movedDistance < 0) {
-                                _headerLayout.animate().y(AutoHideHeaderLayout.this.getY() - _headerLayout.getHeight()).setDuration(ANIMATION_DURATION).start();
-                                _bodyLayout.animate().y(AutoHideHeaderLayout.this.getY()).setDuration(ANIMATION_DURATION).start();
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        // Handle the fling gesture
+                        long time = event.getEventTime() - event.getDownTime();
+                        if (time < MIN_EVENT_TIME) {
+                            if (Math.abs(movedDistance) < _headerLayout.getHeight()) {
+                                if (movedDistance > 0) {
+                                    _headerLayout.animate().y(AutoHideHeaderLayout.this.getY()).setDuration(ANIMATION_DURATION).start();
+                                    _bodyLayout.animate().y(AutoHideHeaderLayout.this.getY() + _headerLayout.getHeight()).setDuration(ANIMATION_DURATION).start();
+                                } else if (movedDistance < 0) {
+                                    _headerLayout.animate().y(AutoHideHeaderLayout.this.getY() - _headerLayout.getHeight()).setDuration(ANIMATION_DURATION).start();
+                                    _bodyLayout.animate().y(AutoHideHeaderLayout.this.getY()).setDuration(ANIMATION_DURATION).start();
+                                }
                             }
+
                         }
 
-                    }
-
+                }
             }
             return super.dispatchTouchEvent(event);
         }
@@ -265,6 +292,29 @@ public class AutoHideHeaderLayout extends RelativeLayout {
 
         public boolean hasInnerView() {
             return _innerView != null;
+        }
+    }
+
+    public static class LayoutParams extends RelativeLayout.LayoutParams {
+
+        public LayoutParams(Context c, AttributeSet attrs) {
+            super(c, attrs);
+        }
+
+        public LayoutParams(int w, int h) {
+            super(w, h);
+        }
+
+        public LayoutParams(ViewGroup.LayoutParams source) {
+            super(source);
+        }
+
+        public LayoutParams(MarginLayoutParams source) {
+            super(source);
+        }
+
+        public LayoutParams(RelativeLayout.LayoutParams source) {
+            super(source);
         }
     }
 
